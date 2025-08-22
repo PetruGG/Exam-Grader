@@ -1,0 +1,3 @@
+Numarul maxim de clienti este: 3
+Clientii au la dispozitie pentru a se conecta urmatorul numar de secunde: 15
+Clientii au la dispozitie pentru a rezolva cerintele urmatorul numar de secunde: 3600

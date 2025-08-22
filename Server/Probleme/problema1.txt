@@ -1,0 +1,34 @@
+Problema 1 - RecycleBin
+Se dă un șir de N numere întregi notat cu A. O subsecvență a șirului A este un șir Ai Ai+1 Ai+2 ... Aj cu
+1 ≤ i ≤ j ≤ N, iar lungimea acestei subsecvențe este egală cu j – i + 1. O operație constă în alegerea
+unei subsecvențe din șir și ștergerea acesteia. În cadrul unei operații, lungimea subsecvenței alese
+trebuie să fie o putere de 2. În cadrul tuturor operațiilor efectuate pe șir, lungimile subsecvențelor
+șterse trebuie să fie distincte.
+Pentru fiecare subsecvență din șir considerăm suma elementelor ei. Definim costul unui șir ca fiind
+maximul acestor sume, în cazul în care șirul conține cel puțin un număr pozitiv, altfel costul șirului este
+egal cu 0.
+Putem aplica o succesiune de operații (eventual niciuna) pe șirul A. În urma acestor operații se vor șterge
+anumite elemente din șir, obținându-se astfel o mulțime de șiruri M={A, A’1, A’2, A’3, ...}.
+Cerinţă
+Să se determine costul maxim posibil ce se poate obține dintr-un șir al mulțimii M.
+Date de intrare
+Prima linie a fișierului de intrare recyclebin.in conține un număr întreg N.
+A doua linie conține N numere întregi, separate prin câte un spațiu, reprezentând valorile șirului A.
+Date de ieşire
+Afișați valoarea costului maxim pe prima linie a fișierului de ieșire recyclebin.out.
+Restricţii și precizări
+- 1 ≤ N ≤ 1000
+- -10^6 ≤ Ai ≤ 10^6 pentru 1 ≤ i ≤ N
+- Pentru teste în valoare de 10 puncte 1 ≤ N ≤ 30
+- Pentru alte teste în valoare de 15 puncte se garantează că există o soluție cu cel mult o operație
+  efectuată
+- Pentru alte teste în valoare de 20 puncte se garantează că există o soluție cu cel mult două operații
+  efectuate
+Exemplu
+recyclebin.in
+14
+13 -19 13 -5 -12
+11 20 4 -10 1 -7
+19 -19 3
+recyclebin.out
+76

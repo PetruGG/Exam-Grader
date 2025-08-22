@@ -1,0 +1,58 @@
+titlu: OnlineInfoOlympiad
+autor: Ghionea Petru-Daniel
+institutie: Universitatea "Alexandru Ioan Cuza" din Iasi
+abstract: OnlineInfoOlympiad este o aplicatie ce simuleaza o olimpiada on-line de informatica, permitand conectarea mai multor utilizatori folosind un model client-server.Aplicatia analizeaza solutiile primite de la utilizatori si transmite inapoi nota obtinuta.
+keywords: Olimpiada on-line Model client-server Corectare automata
+1 Introducere
+Scopul acestei aplicatii este crearea unui model client-server interactiv si usor de utilizat pentru o olimpiade on-line de informatica.
+Obiectivele acestei aplicatii sunt:
+-Automatizarea: Dezvoltarea unui sistem de evaluare automata a solutiilor trimise de utilizatori.
+-Feedback-ul: Oferirea unui feedback utilizatorilor cu privire la corectitudinea solutiilor acestora si punctajului obtinut.
+-Extensibilitatea: Crearea unei arhitecturi ce permite adaugarea de noi functionalitati si imbunatatiri ulterioare.
+2 Tehnologii aplicate
+Aceasta aplicatie foloseste modelul TCP/IP(Transmission Control Protocol/Internet Protocol) utilizat pentru a permite comunicarea intre dispozitivele dintr-o retea.Format din patru nivele si anume: 
+Nivelul fizic ce asigura conectarea host-ului la retea
+Nivelul retea ce permite gazdelor sa emita pachete in orice retea; pachete care vor circula independent pana la destinatie
+Nivelul transport ce asigura realizarea comunicarii intre gazda sursa si gazda destinatie
+Nivelul aplicatie care contine protocoale de nivel inalt si care este cel mai apropiat de utilizator oferind interfata pentru aplicatia care utilizeaza reteaua
+La nivelul transport dintre protocolul TCP si protocolul UDP chiar daca protocolul UDP este mai rapid, acesta nu ofera garantii privind livrarea sau ordinea datelor, nu are control de flux, deci nu asteapta o confirmare de primire de la destinatar inainte de a transmite urmatorul pachet si nu este un protocol orientat-conexiune, deci nu stabileste o conexiune inainte de a trimite date.
+Toate aceste aspecte sunt necesare pentru a simula un concurs de tip olimpiada, deci a fost ales protocolul TCP.
+3 Structura aplicatiei
+Pentru modelarea acestei aplicatii au fost folosite urmatoarele concepte:
+-Sockets: sunt utilizate functiile din <sys/socket.h> pentru a crea si gestiona socket-uri ce permit comunicarea intre server si client
+-Forking: este utilizata functia fork() in server pentru a crea procese fiu ce vor comunica cu un client in parte, permitand astfel acceptarea simultana a mai multor clienti
+-Manipularea de fisiere: serverul citeste continutul fisierului de configurare si al problemei alese folosind functii precum 'fopen' sau 'fread'
+-Manipularea de directoare: este utilizata o functie custom pentru a determina calea completa a unui fisier pana la un anumit director
+-Generare aleatoare: serverul alege in mod aleatoriu problema ce urmeaza a fi rezolvata de catre client, utilizand functia rand() pentru a genera un numar aleatoriu
+-Aplicarea conceptelor de concurenta: serverul foloseste primitiva select() pentru a gestiona conectarea clientilor la server intr-un anumit timp
+-Gestionarea timpului: sunt utilizate primitivele time() si clock() pentru a monitoriza timpul de rezolvare al clientului
+-Memorie partajata: serverul foloseste un flag partajat in memorie pentru a trimite problema ce trebuie rezolvata clientilor in acelasi timp
+-Compilare si executie: serverul compileaza si ruleaza solutia clientului folosind apeluri de sistem
+-Validarea rezultatelor: serverul compara rezultatul obtinut de la client cu solutia corecta si acorda o nota in functie de timpul de executie,corectitudinea solutiei si timpul de upload
+4 Aspecte de implementare
+Aplicatia va urma urmatorul protocol de comunicare:
+Conectarea: Serverul asteapta conexiuni la portul 2000 folosind primitiva 'listen'; iar clientul se conecteaza la adresa serverului si portul specificate in linia de comanda folosind primitiva 'connect'.De asemenea, este utilizata primitiva 'select' pentru a aloca un anumit timp de conectare.Daca acest timp expira, problema ce trebuie rezolvata va fi trimisa clientilor si nu vor mai fi acceptate conexiuni.
+Initierea comunicarii: Dupa conectare, serverul trimite problema selectata clientului impreuna cu timpul alocat rezolvarii si va genera fisierul in care se va scrie rezolvarea
+Comunicarea propriu zisa: Clientul va transmite serverului comenzi si va citi raspunsurile primite folosind primitivele 'read' si 'write'.Serverul va utiliza aceleasi primitive pentru a citi comenzile si a transmite raspunsurile.De asemenea, clientul va avea lista de comenzi disponibile si va astepta introducerea unei comenzi de catre utilizator
+Gestionarea timpului alocat rezolvarii: Dupa expirarea timpului alocat rezolvarii serverul va schimba permisiunile de acces la fisierul in care se afla rezolvarea,va copia rezolvarea clientului, o va compila si corecta.De asemenea, corectarea va incepe si daca utilizatorul introduce comanda 'submit'.Corectarea consta in compararea fisierului de output al clientului cu fisierul de output corect.Se va asigna o nota in functie daca fisierul de output este corect, partial corect sau incorect; precum si in functie de timpul de executie si timpul de upload.
+Incheierea conexiunii: Daca utilizatorul introduce comanda 'exit' serverul va opri conexiunea cu acel client
+Intr-un scenariu real aplicatia ar putea fi utilizata in urmatorul mod:
+Un profesor coordonator ce va rula aplicatia server va modifica fisierul de configurare stabilind numarul maxim de clienti, timpul alocat pentru rezolvarea problemei alese si timpul alocat conectarii.
+Elevii ce participa la concurs vor rula aplicatia client pe masinile proprii specificand in linia de comanda adresa IP si portul, atat timp cat nu depasesc timpul alocat conectarii.
+Aplicatia server va alege in mod aleator o problema si va trimite clientilor informatii despre aceasta precum si timpul alocat rezolvarii.
+Elevii vor rezolva problema in timpul alocat si vor scrie rezolvarea in fisierul denumit 'rezolvare.cpp' creat de server.
+Dupa terminarea rezolvarii elevii vor introduce comanda submit pentru a notifica serverul sa inceapa corectarea.Dupa introducerea comenzii submit elevul respectiv nu va mai avea acces la fisierul 'rezolvare.cpp' pentru a face modificari.De asemenea, dupa expirarea timpului alocat comanda 'submit' va fi apelata in mod automat. 
+Serverul va corecta solutiile si va nota fiecare elev in parte.
+Dupa primirea rezultatului obtinut elevul introduce comanda 'exit' pentru a se deconecta
+5 Concluzii
+Solutia propusa ar putea fi imbunatatita astfel:
+Adaugarea functionalitatii complete a comenzilor.
+
+Adaugarea unui mecanism de corectare si notare a solutiilor utilizatorilor.
+
+Adaugarea unei sincronizari astfel incat toti clientii sa primeasca problema in acelasi timp chiar daca aplicatia client nu este rulata in acelasi timp.
+
+Adaugarea unui clasament al elevilor in functie de nota obtinuta.
+6 Referinte bibliografice
+1. Site-ul cursului de retele de calculatoare: https://profs.info.uaic.ro/~computernetworks/cursullaboratorul.php
+2. Site-ul profesorului de laborator: https://www.andreis.ro/teaching/computer-networks

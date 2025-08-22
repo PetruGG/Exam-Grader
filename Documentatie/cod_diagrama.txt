@@ -1,0 +1,75 @@
+@startuml
+title OnlineInfoOlympiad
+actor Client
+participant Server
+participant config.txt
+participant Folder 'Probleme'
+participant ChildProcess
+participant rezolvare.cpp
+activate Client
+activate Server
+Server->config.txt:read(config.txt)
+activate config.txt
+Server<--config.txt:configuration info
+deactivate config.txt
+Server->Server:choose problem
+Server->Folder 'Probleme':read(chosen_problem.txt)
+activate Folder 'Probleme'
+Server<--Folder 'Probleme':problem information
+Server->Folder 'Probleme':read(chosen_problem_input.txt)
+Server<--Folder 'Probleme':input information
+Server->Folder 'Probleme':read(chosen_problem_output.txt)
+Server<--Folder 'Probleme':output information
+deactivate Folder 'Probleme'
+Server->Server:listen(),select()
+Client->Server:connect()
+Server->Server:check for timeout
+Client<--Server:accept()
+alt
+Clientx#red-Server:failure:connection time expired
+Server->ChildProcess:Create child process(fork)
+activate ChildProcess
+Server<--ChildProcess:Created child process
+Server->Server:resume listening
+ChildProcess->Client:Serve Client
+ChildProcess->rezolvare.cpp:generate rezolvare.cpp
+activate rezolvare.cpp
+ChildProcess<--rezolvare.cpp:generated 
+deactivate rezolvare.cpp
+Client<--ChildProcess:order number,\nproblem information,\ntime to solve
+Client->rezolvare.cpp:write(rezolvare.cpp)
+activate rezolvare.cpp
+alt
+Client<--rezolvare.cpp:write succesfull
+deactivate rezolvare.cpp
+Client->rezolvare.cpp:write(rezolvare.cpp) after time expired
+activate rezolvare.cpp
+Clientx#red-rezolvare.cpp:failure:time expired
+deactivate rezolvare.cpp
+Client->ChildProcess:'submit' command
+ChildProcess->rezolvare.cpp:change permissions(chmod)
+activate rezolvare.cpp
+ChildProcess<--rezolvare.cpp:changed permissions
+ChildProcess->rezolvare.cpp:read(rezolvare.cpp)
+ChildProcess<--rezolvare.cpp:solution info
+deactivate rezolvare.cpp
+Client<--ChildProcess:command succesfull
+ChildProcess->rezolvare.cpp:'submit' command(time expired)
+activate rezolvare.cpp
+ChildProcess->rezolvare.cpp:change permissions(chmod)
+ChildProcess<--rezolvare.cpp:changed permissions
+ChildProcess->rezolvare.cpp:read(rezolvare.cpp)
+ChildProcess<--rezolvare.cpp:solution info
+deactivate rezolvare.cpp
+ChildProcess->rezolvare.cpp:'submit' command(time expired) after user already submitted
+activate rezolvare.cpp
+ChildProcessx#red-rezolvare.cpp:failure:already submitted
+deactivate rezolvare.cpp
+ChildProcess->ChildProcess:evaluate solution
+ChildProcess-->Client:grade
+Client->ChildProcess:'exit command'
+Client<--ChildProcess:command succesfull
+deactivate Client
+ChildProcess-->Server:Served client
+deactivate ChildProcess
+@enduml

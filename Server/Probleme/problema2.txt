@@ -1,0 +1,30 @@
+Problema 2: rufe
+Alex vrea să își usuce rufele pe balcon. El a spălat K tricouri și o șosetă. Uscătorul lui Alex are N niveluri,
+iar fiecare nivel are M locuri unde poate atârna câte un singur obiect de îmbrăcăminte.
+Alex usucă hainele într-un mod specific: începe prin a pune șoseta pe nivelul A, locul B, iar apoi aduce
+coșul de rufe cu cele K tricouri și le așază pe rând, mereu alegând o poziție liberă cât mai depărtată de
+locul unde a pus șoseta. Metrica pe care o găsește ca fiind cea mai potrivită când vine vorba de uscatul
+rufelor este distanța Manhattan, astfel încât distanța de la nivelul r1, locul c1 la nivelul r2, locul c2 are
+valoarea expresiei |r1 – r2| + |c1 - c2|.
+Cerinţe
+Aflați distanța dintre poziția unde a atârnat ultimul tricou și poziția unde se usucă șoseta.
+Date de intrare
+Pe prima linie a fișierului de intrare rufe.in se vor afla 5 numere întregi N, M, A, B, și K, cu semnificația
+din enunț, separate prin câte un spațiu.
+Date de ieşire
+În fișierul de ieșire rufe.out se va afla o singură linie care să conțină valoarea cerută.
+Restricţii și precizări
+- 1 ≤ N, M ≤ 109
+- 1 ≤ A ≤ N
+- 1 ≤ B ≤ M
+- 1 ≤ K ≤ N * M – 1
+- Pentru teste în valoare de 13 puncte se garantează că N, M ≤ 103.
+- Pentru alte teste în valoare de 12 puncte se garantează că N ≤ 106.
+- Pentru alte teste în valoare de 12 puncte se garantează că M ≤ 106.
+- Pentru alte teste în valoare de 18 puncte se garantează că K ≤ 106.
+- Pentru alte teste în valoare de 7 puncte se garantează că A = B = 1.
+Exemplu
+rufe.in
+3476 53410 438 9217 1000000
+rufe.out
+45818
